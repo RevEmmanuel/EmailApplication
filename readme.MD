@@ -1,4 +1,4 @@
-# Course Management Application
+# Email Application
 This ia a Java Spring boot server application to help manage and handle mails of Users. It provides different functionalities just like an e-mail application.
 
 Technologies used:
