@@ -38,13 +38,12 @@ public class UserServiceImpl implements UserService {
                 .build();
         AppUser savedUser = userRepository.save(user);
 
-        CreateUserResponse userResponse = CreateUserResponse.builder()
+        return CreateUserResponse.builder()
                 .email(savedUser.getEmail())
                 .firstName(savedUser.getFirstName())
                 .lastName(savedUser.getLastName())
                 .id(savedUser.getId())
                 .build();
-        return userResponse;
     }
 
     @Override
