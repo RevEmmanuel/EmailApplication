@@ -20,10 +20,10 @@ public class Email {
     private Long id;
 
     @ManyToOne
-    private User sender;
+    private AppUser sender;
 
     @ManyToMany
-    private List<User> recipients;
+    private List<AppUser> recipients;
 
     private LocalDateTime sentAt;
     private String subject;

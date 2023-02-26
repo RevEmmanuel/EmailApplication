@@ -7,10 +7,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class MailSenderServiceImpl implements MailSenderService {
 
-    private final JavaMailSender mailSender;
+//    @Autowired
+//    private final JavaMailSender mailSender;
 
 
     public void sendEmail(String to, String subject, String body) {

@@ -28,5 +28,5 @@ public class Forward {
     private LocalDateTime sentAt;
 
     @ManyToMany
-    private Set<User> recipients;
+    private Set<AppUser> recipients;
 }

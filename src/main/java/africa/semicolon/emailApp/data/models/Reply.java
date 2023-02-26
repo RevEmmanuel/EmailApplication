@@ -27,5 +27,5 @@ public class Reply {
     private LocalDateTime sentAt;
 
     @ManyToMany
-    private Set<User> recipients;
+    private Set<AppUser> recipients;
 }

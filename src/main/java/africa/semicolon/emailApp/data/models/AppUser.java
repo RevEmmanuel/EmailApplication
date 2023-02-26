@@ -1,10 +1,7 @@
 package africa.semicolon.emailApp.data.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +10,7 @@ import java.util.List;
 @Builder
 @Entity
 @Data
-public class User {
+public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
