@@ -10,14 +10,20 @@ import africa.semicolon.emailApp.data.models.AppUser;
 import africa.semicolon.emailApp.data.repositories.UserRepository;
 import africa.semicolon.emailApp.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
 
     @Override
@@ -106,6 +112,25 @@ public class UserServiceImpl implements UserService {
                 .emails(appUser.getEmails())
                 .build();
         return foundUser.getEmails();
+    }
+
+    @Override
+    public Page<Email> getInboxForUser(Long userId, Pageable pageable) {
+        AppUser appUser = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<Email> foundEmails = emailService.getInboxForUser(appUser);
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Email> pageEmails;
+
+        if (foundEmails.size() < startItem) {
+            pageEmails = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, foundEmails.size());
+            pageEmails = foundEmails.subList(startItem, toIndex);
+        }
+
+        return new PageImpl<>(pageEmails, pageable, foundEmails.size());
     }
 
     @Override
