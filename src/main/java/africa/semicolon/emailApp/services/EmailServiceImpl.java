@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
-    private final UserService userService;
     private final EmailRepository emailRepository;
 
     @Override

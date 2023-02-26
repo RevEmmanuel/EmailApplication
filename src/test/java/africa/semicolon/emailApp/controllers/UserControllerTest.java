@@ -1,11 +1,14 @@
 package africa.semicolon.emailApp.controllers;
 
 import africa.semicolon.emailApp.data.dtos.requests.CreateUserRequest;
-import africa.semicolon.emailApp.data.dtos.responses.CreateUserResponse;
+import africa.semicolon.emailApp.data.dtos.responses.FindUserResponse;
+import africa.semicolon.emailApp.exceptions.UserNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,40 +17,66 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.ArrayList;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @SpringBootTest
+@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
-    @Autowired
-    private UserController userController;
     @Autowired
     private MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @BeforeEach
-    void setUp() {
-
-    }
-
     @Test
     void getUserByEmail() {
+        String email = "cynthiaosondo@myapp.com";
+        FindUserResponse expectedUser = FindUserResponse.builder()
+                .id(44L)
+                .firstName("Cynthia")
+                .lastName("Osondo")
+                .email("cynthiaosondo@myapp.com")
+                .emails(new ArrayList<>())
+                .sentEmail(new ArrayList<>())
+                .build();
+        try {
+            MvcResult result = mockMvc.perform(get("/api/users/emails/" + email))
+                    .andExpect(status().is(HttpStatus.OK.value()))
+                    .andReturn();
 
+            String responseBody = result.getResponse().getContentAsString();
+            FindUserResponse actualUser = objectMapper.readValue(responseBody, FindUserResponse.class);
+            assertEquals(expectedUser, actualUser);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
     void getUserById() {
-        CreateUserRequest createUserRequest = CreateUserRequest.builder()
-                .firstName("Adeola")
-                .lastName("Babanla")
-                .email("adebaba@myapp.com")
-                .password("adebaba")
+        long userId = 44L;
+        FindUserResponse expectedUser = FindUserResponse.builder()
+                .id(44L)
+                .firstName("Cynthia")
+                .lastName("Osondo")
+                .email("cynthiaosondo@myapp.com")
+                .emails(new ArrayList<>())
+                .sentEmail(new ArrayList<>())
                 .build();
         try {
-            mockMvc.perform(post("/api/users/emails/{}")
-                            .content(objectMapper.writeValueAsString(createUserRequest))
-                            .contentType(MediaType.APPLICATION_JSON_VALUE))
-                    .andExpect(status().is(HttpStatus.CREATED.value()))
-                    .andDo(print());
+            MvcResult result = mockMvc.perform(get("/api/users/" + userId))
+                    .andExpect(status().is(HttpStatus.OK.value()))
+                    .andReturn();
+
+            String responseBody = result.getResponse().getContentAsString();
+            FindUserResponse actualUser = objectMapper.readValue(responseBody, FindUserResponse.class);
+            assertEquals(expectedUser, actualUser);
         }
         catch (Exception e) {
             throw new RuntimeException(e);
@@ -57,10 +86,10 @@ class UserControllerTest {
     @Test
     void createUser() {
         CreateUserRequest createUserRequest = CreateUserRequest.builder()
-                .firstName("Cynthia")
-                .lastName("Osondo")
-                .email("cynthiaosondo@myapp.com")
-                .password("iloveadeola")
+                .firstName("User")
+                .lastName("Example")
+                .email("userexample@myapp.com")
+                .password("password2")
                 .build();
         try {
             mockMvc.perform(post("/api/users/create")
@@ -75,10 +104,23 @@ class UserControllerTest {
     }
 
     @Test
-    void deleteUser() {
+    void deleteUser() throws Exception {
+        long userId = 50L;
+            mockMvc.perform(delete("/api/users/" + userId))
+                    .andExpect(status().is(HttpStatus.OK.value()))
+                    .andDo(print());
+            try {
+                mockMvc.perform(get("/api/users/" + userId))
+                        .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
+            }
+            catch (Exception e) {
+                System.out.println("Test passed.");
+            }
     }
 
     @Test
     void updateUser() {
+
     }
+
 }
