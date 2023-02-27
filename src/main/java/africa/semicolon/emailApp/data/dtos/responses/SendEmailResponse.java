@@ -1,32 +1,26 @@
-package africa.semicolon.emailApp.data.models;
+package africa.semicolon.emailApp.data.dtos.responses;
 
-import jakarta.persistence.*;
+import africa.semicolon.emailApp.data.models.AppUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Data
-public class Email {
+public class SendEmailResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
     private AppUser sender;
-
-    @ManyToMany
     private List<AppUser> recipients;
-
-    private LocalDateTime createdAt;
+    private LocalDateTime requestCreatedAt;
     private LocalDateTime sentAt;
     private String subject;
     private String body;
+
 }

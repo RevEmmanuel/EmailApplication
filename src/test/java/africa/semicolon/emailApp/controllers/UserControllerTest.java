@@ -105,7 +105,7 @@ class UserControllerTest {
 
     @Test
     void deleteUser() throws Exception {
-        long userId = 50L;
+        long userId = 52L;
             mockMvc.perform(delete("/api/users/" + userId))
                     .andExpect(status().is(HttpStatus.OK.value()))
                     .andDo(print());
