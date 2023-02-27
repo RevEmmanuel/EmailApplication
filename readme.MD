@@ -5,6 +5,7 @@ Technologies used:
 * `Springboot`
 * `PostgreSQL`
 * `Swagger Docs`
+* `Java Mail Sender`
 
 ## Important links
 To clone project
